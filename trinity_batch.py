@@ -2,8 +2,7 @@
 
 __author__ = "Gene Blanchard"
 __email__ = "me@geneblanchard.com"
-__version__ = "0.10 BOOTES"
-subl 
+__version__ = "0.10 BOOTES" 
 '''
 
 Trinity Batch Script
@@ -52,6 +51,8 @@ def main():
 	parser.add_argument("-t", "--threads", dest="processors", default='32', help="The number of processors to use. Default is 90 percent of available. i.e. This machine's DEFAULT = 32 " )
 	# -r --recurse
 	parser.add_argument("-r", "--recurse", action="store_true", dest="recurse", help="recurse through all directories")
+	# -m --memory
+	parser.add_argument("-m","--memory", dest="ram", default="96G", help="The amount of RAMs to use. Default: 96G")
 
 	# Parse arguments
 	args = parser.parse_args()
@@ -62,6 +63,7 @@ def main():
 	output_path = os.path.abspath(args.output_path)+'/' # REQUIRED
 	processors = args.processors
 	recurse = args.recurse
+	ram = args.ram
 
 	fileset = make_fileset(recurse, file_extension, input_dir)
 
@@ -71,7 +73,7 @@ def main():
 		# Build filenames for read one and two
 		read_1 = filename+'_1'+file_extension
 		read_2 = filename+'_2'+file_extension
-		command_string = "Trinity --seqType fq --left {} --right {} --JM 96G --CPU {} --full_cleanup -o {}.Trinity.fasta;".format(read_1, read_2, threads, output_path)
+		command_string = "/media/nfs_opt/trinity/trinityrnaseq_r20140717/Trinity --seqType fq --left {} --right {} --JM {} --CPU {} --full_cleanup -o {}/{}.Trinity.fasta;".format(read_1, read_2, ram, processors, output_path.rstrip('/'), os.path.basename(filename))
 		# Add command to the command list 
 		command_list.append(command_string)
 
